@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign In - Bank of NRT</title>
+    <!-- Add Bootstrap CSS -->
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        .navbar-custom .nav-link {
+            background-color: lightblue;
+            border: 1px solid black;
+            margin-right: 10px; /* Space between items */
+            border-radius: 5px; /* Optional: rounded corners */
+        }
+        .navbar-custom .nav-link:hover {
+            background-color: #d0e9f4; /* Optional: slightly darker blue on hover */
+        }
+        .navbar-custom .dropdown-menu {
+            background-color: lightblue;
+            border: 1px solid black;
+        }
+        
+        .navbar-custom {
+            border-bottom: 2px solid #ddd; /* Border color and thickness */
+        }
+        .container {
+            margin-top: 50px; /* Adjust space between nav and container */
+        }
+        .registration-box {
+            max-width: 500px;
+            margin: 0 auto; /* Center horizontally */
+        }
+        
+        .card-custom {
+            border-bottom-left-radius: 10% 50%;
+            border-top-left-radius: 10% 50%;
+            background-color: #f8f9fa;
+            padding: 20px; /* Adjust padding as needed */
+        }
+
+        .input-custom {
+            background-color: white;
+            border: 1px solid #ced4da; /* Standard border for input fields */
+            border-radius: 0.25rem; /* Standard border radius for input fields */
+        }
+
+        .btn-rounded {
+            border-radius: 1.5rem; /* Round button corners */
+        }
+
+        .white-text {
+            color: hsl(52, 0%, 98%);
+            font-weight: 100;
+            font-size: 14px;
+        }
+
+        .back-button {
+            background-color: hsl(52, 0%, 98%);
+            font-weight: 700;
+            color: black;
+            margin-top: 50px;
+        }
+
+        .btn-primary {
+            background-color: #0062CC; /* Button color */
+            border-color: #0062CC; /* Button border color */
+        }
+
+        .alert-custom {
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-light bg-body-tertiary navbar-custom">
+        <div class="container-fluid">
+            <a class="navbar-brand">Bank of NRT</a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav mx-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">Services</a>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            Login/Signup
+                        </a>
+                        <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                            <a class="dropdown-item" href="/api/loginmgt/login">Login</a>
+                            <a class="dropdown-item" href="/api/loginmgt/registration">Signup</a>
+                        </div>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">About</a>
+                    </li>
+                </ul>
+                <ul class="navbar-nav ml-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">Profile</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+    
+    <div class="container">
+        <div class="row justify-content-center mt-5">
+            <div class="col-md-8 col-lg-6">
+                <div class="card card-custom">
+                    <div class="card-body">
+                        <h2 class="text-center">Sign In</h2>
+                        <!-- Display error messages -->
+                        <div th:if="${param.error}" class="alert alert-danger alert-custom" role="alert">
+                            Invalid username or password.
+                        </div>
+                        <form th:action="@{/signinpage}" method="post">
+                            <div class="form-group">
+                                <label for="username">Username</label>
+                                <input type="text" id="username" name="username" class="form-control input-custom" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="password">Password</label>
+                                <input type="password" id="password" name="password" class="form-control input-custom" required>
+                            </div>
+                            <button type="submit" class="btn btn-primary btn-rounded w-100">Sign In</button>
+                        </form>
+                        <div class="text-center mt-3">
+                            <a href="/api/loginmgt/registration" class="btn btn-link">Create an account</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add Bootstrap JS and dependencies -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>

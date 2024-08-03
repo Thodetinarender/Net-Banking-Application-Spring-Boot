@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Custom CSS (Optional for additional styles) -->
+    <style>
+        .navbar-custom {
+            background-color: white;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        .navbar-nav .nav-item .nav-link {
+            font-size: 1.125rem;
+            font-weight: 600;
+        }
+        .navbar-nav .nav-item .nav-link:hover {
+            background-color: #f8f9fa;
+        }
+        .btn-custom {
+            background-color: #00bcd4;
+            color: white;
+            font-weight: 600;
+            border-radius: 1.5rem;
+        }
+        .btn-custom:hover {
+            background-color: #0288d1;
+        }
+        .logo {
+            max-width: 100px;
+        }
+        .avatar {
+            width: 30px;
+            margin-left: 0.5rem;
+        }
+        .hero-section img {
+            max-width: 100%;
+            height: auto;
+        }
+        
+         .bordered-container {
+            border: 2px solid #ccc; /* Adjust border color and width */
+            padding: 10px 20px; /* Adjust top-bottom and left-right padding */
+            margin: 0 20px; /* 20px space on left and right sides */
+            background-color: #ccc; /* Optional: background color */
+            box-sizing: border-box; /* Ensures padding and border are included in the element’s total width and height */
+        }
+        
+        .avatar {
+            width: 40px;
+            height: 40px;
+            line-height: 40px;
+            text-align: center;
+            border-radius: 50%;
+            font-size: 18px;
+            color: #fff;
+            background-color: #007bff; /* Bootstrap primary color */
+        }
+       
+        
+    </style>
+    <style>
+    .custom-container {
+        border: 2px solid #ddd; /* Border around the container */
+        border-radius: 8px; /* Optional: rounded corners */
+        padding: 20px; /* Optional: spacing inside the container */
+        background-color: #f9f9f9; /* Optional: background color for the container */
+    }
+
+    .custom-card {
+        width: 150px; /* Fixed width for consistent card size */
+        height: 120px; /* Fixed height for consistent card size */
+        padding: 10px;
+        text-align: center;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        border: 2px solid #ddd; /* Full border around the card */
+        border-radius: 8px;
+        background-color: #fff; /* Background color for the card */
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Optional shadow for better visibility */
+        margin: 1px; /* Space between cards */
+    }
+</style>
+</head>
+<body class="bg-light">
+    <nav class="navbar navbar-expand-lg navbar-light navbar-custom px-4 py-3">
+        <a class="navbar-brand" href="#">
+            <img class="logo" src="/images/bank-logo.png" alt="logo">
+        </a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav mr-auto">
+                <li class="nav-item">
+                    <a class="nav-link" href="/api/transactions/transfer">Pay</a>
+                </li>
+                 <li class="nav-item">
+                   <a class="nav-link" th:href="@{/api/transactions/transactionhistory/{accountId}(accountId=${accountId})}">Payments History</a>
+                 </li>
+
+
+                <li class="nav-item">
+                    <a class="nav-link" href="/api/transactions/deposit">Deposit</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/api/transactions/withdraw">Withdraw</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/api/transactions/checkBalance">Check Balance</a>
+                </li>
+            </ul>
+            <button class="btn btn-custom d-flex align-items-center" data-toggle="modal" data-target="#userDetailsModal">
+             <span th:text="${username}">Sign In</span>
+             <img class="avatar" src="/images/avtar.svg" alt="avatar">
+           </button>
+        </div>
+    </nav>
+
+                 <!-- Modal HTML -->
+<div class="modal fade" id="userDetailsModal" tabindex="-1" role="dialog" aria-labelledby="userDetailsModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="userDetailsModalLabel">User Details</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p><strong>Username:</strong> <span th:text="${username}"></span></p>
+                <p><strong>Email:</strong> <span th:text="${email}"></span></p>
+                <p><strong>Phone:</strong> <span th:text="${phone}"></span></p>
+                <p><strong>Address:</strong> <span th:text="${address}"></span></p>
+            </div>
+            <div class="modal-footer">
+                <form action="/logout" method="post">
+                    <button type="submit" class="btn btn-danger">Logout</button>
+                </form>
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+    
+    <div class="container p-2 mx-auto text-center bordered-container mt-1">
+        <p class="text-base font-semibold">
+            No Wallet KYC Required 😊 to pay using UPI on Paytm. Learn more.
+        </p>
+    </div>
+    
+    <div class="container mt-5 custom-container">
+    <div class="row mt-4">
+        <!-- Loop through each user and create a small card for them -->
+        <div class="col-md-3 mb-3" th:each="user : ${transactionUsers}">
+            <div class="custom-card"> 
+                <!-- Link to view transaction details -->
+                <a th:href="@{/api/transactions/transactionhistory/{accountId}(accountId=${user.id})}" class="d-block text-decoration-none text-dark">
+                    <!-- Profile icon with user's initial -->
+                    <div class="avatar bg-primary text-white d-inline-block rounded-circle" style="width: 40px; height: 40px; line-height: 40px; font-size: 20px;">
+                        <span th:text="${#strings.substring(user.username, 0, 1)}"></span>
+                    </div>
+                    <div class="mt-2">
+                        <!-- Username with overflow handling -->
+                        <span class="d-block" th:text="${user.username}" style="overflow: hidden; text-overflow: ellipsis; white-space: nowrap;"></span>
+                    </div>
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+    <section class="hero-section container pt-5 pb-5 d-flex flex-column flex-md-row align-items-center">
+        <div class="text-center text-md-left mb-4 mb-md-0">
+            <img class="w-20 mx-auto mx-md-0" src="/images/bank-small.png" alt="hero Paytm">
+            <h1 class="text-5xl font-bold mt-4 mb-4">India's Most-loved <br> Payments App</h1>
+            <p class="text-lg font-semibold">
+                Recharge & pay bills, book flights & movie tickets, <br>
+                open a savings account, invest in stocks & mutual <br>
+                funds, and do a lot more.
+            </p>
+            <button class="btn btn-dark d-flex align-items-center mt-4">
+                Download Paytm App
+                <svg width="14" height="16" viewBox="0 0 14 16" fill="none" class="ml-2" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M11.6593 15.3557C10.7589 16.1979 9.76546 16.0666 8.81854 15.6695C7.81182 15.2644 6.89149 15.2388 5.82828 15.6695C4.50426 16.2203 3.80155 16.0602 3.00415 15.3557C-1.49786 10.8883 -0.833353 4.08311 4.28331 3.82691C5.52427 3.89096 6.39311 4.48821 7.12406 4.53785C8.21052 4.32489 9.25047 3.71483 10.4133 3.79489C11.8105 3.90377 12.8554 4.43538 13.5531 5.3913C10.6791 7.05657 11.3603 10.7073 14 11.7321C13.4717 13.0691 12.7939 14.3902 11.6576 15.3669L11.6593 15.3557ZM7.02439 3.77888C6.88982 1.79336 8.55939 0.160122 10.4798 0C10.7439 2.28974 8.32017 4.00305 7.02439 3.77888Z" fill="#fff"></path>
+                </svg>
+                <svg width="14" height="16" class="ml-2" viewBox="0 0 14 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path fill-rule="evenodd" clip-rule="evenodd" d="M0.088012 0.571735C0.0310801 0.726729 0 0.910797 0 1.121V14.8786C0 15.0894 0.0311427 15.2736 0.0881839 15.4286L7.32808 7.9997L0.088012 0.571735ZM0.590122 15.9564C0.85223 16.0466 1.18264 15.9995 1.54068 15.7912L10.0736 10.8165L7.83627 8.52109L0.590122 15.9564ZM10.7221 10.4391L13.3647 8.8987C14.2118 8.40415 14.2118 7.59609 13.3647 7.10217L10.7211 5.561L8.34443 7.99966L10.7221 10.4391ZM10.073 5.18317L1.54068 0.209061C1.18252 0.000250885 0.852017 -0.0466058 0.589868 0.0438429L7.83624 7.47828L10.073 5.18317Z" fill="#fff"></path>
+                </svg>
+            </button>
+        </div>
+        <div class="p-2">
+            <img class="w-100" src="/images/hero.webp" alt="paytm mobile hero image">
+        </div>
+    </section>
+    
+    <section class="container pt-5 pb-5">
+   <div class="full-width-container">
+    <div class="row border-cover rounded">
+		 <div class="col-md-2 p-2">
+			<a href="/api/transactions/transfer" class="text-decoration-none">
+            <div class="card rounded-lg border-0 shadow-sm h-100 bg-transparent hover:bg-cyan-500 smaller-card">
+                <div class="card-body text-center">
+                    <div class="rounded-circle bg-indigo-500 p-2 mb-3">
+                        <img src="/images/upi.png" alt="home png" class="img-fluid rounded-circle">
+                    </div>
+                    <h5 class="card-title text-white">Pay</h5>
+                    <p href="" class="text-white">Mobile</p>
+                    <p class="text-white">Number</p>
+                </div>
+            </div>
+         </div>
+        <div class="col-md-2 p-2">
+			<a href="/api/transactions/deposit" class="text-decoration-none">
+            <div class="card rounded-lg border-0 shadow-sm h-100 bg-transparent hover:bg-cyan-500 smaller-card">
+                <div class="card-body text-center">
+                    <div class="rounded-circle bg-indigo-500 p-2 mb-3">
+                        <img src="/images/wallet.png" alt="home png" class="img-fluid rounded-circle">
+                    </div>
+                    <h5 class="card-title text-white">Deposit</h5>
+                    <p href="" class="text-white">Amount</p>
+                    <p class="text-white">Your Wallet</p>
+                </div>
+            </div>
+        </div>
+        
+         <div class="col-md-2 p-2">
+			<a href="/api/transactions/checkBalance" class="text-decoration-none">
+            <div class="card rounded-lg border-0 shadow-sm h-100 bg-transparent hover:bg-cyan-500 smaller-card">
+                <div class="card-body text-center">
+                    <div class="rounded-circle bg-indigo-500 p-2 mb-3">
+                        <img src="/images/home.png" alt="home png" class="img-fluid rounded-circle">
+                    </div>
+                    <h5 class="card-title text-white">Chack</h5>
+                    <p href="" class="text-white">Wallet</p>
+                    <p class="text-white">Balance</p>
+                </div>
+            </div>
+        </div>
+          <div class="col-md-2 p-2">
+			<a href="/api/transactions/withdraw" class="text-decoration-none">
+            <div class="card rounded-lg border-0 shadow-sm h-100 bg-transparent hover:bg-cyan-500 smaller-card">
+                <div class="card-body text-center">
+                    <div class="rounded-circle bg-indigo-500 p-2 mb-3">
+                        <img src="/images/home.png" alt="home png" class="img-fluid rounded-circle">
+                    </div>
+                    <h5 class="card-title text-white">Withdraw</h5>
+                    <p href="" class="text-white">Wallet</p>
+                    <p class="text-white">Amount</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-2 p-2">
+            <div class="card rounded-lg border-0 shadow-sm h-100 bg-transparent hover:bg-cyan-500 smaller-card">
+                <div class="card-body text-center">
+                    <div class="rounded-circle bg-indigo-500 p-2 mb-3">
+                        <img src="/images/phone.png" alt="cylendar png" class="img-fluid rounded-circle">
+                    </div>
+                    <h5 class="card-title text-white">Contacts</h5>
+                    <a href="#" class="text-white">Add</a>
+                    <p class="text-white">New </p>
+                </div>
+            </div>
+        </div>
+        
+         <div class="col-md-2 p-2">
+			<a th:href="@{/api/transactions/transactionhistory/{accountId}(accountId=${accountId})}" class="text-decoration-none">
+            <div class="card rounded-lg border-0 shadow-sm h-100 bg-transparent hover:bg-cyan-500 smaller-card">
+                <div class="card-body text-center">
+                    <div class="rounded-circle bg-indigo-500 p-2 mb-3">
+                        <img src="/images/upi.png" alt="home png" class="img-fluid rounded-circle">
+                    </div>
+                    <h5 class="card-title text-white">Show</h5>
+                    <p href="" class="text-white">Transaction</p>
+                    <p class="text-white">History</p>
+                </div>
+            </div>
+         </div>
+    </div>
+   </div>
+</section>
+
+
+<style>
+	.bg-light-blue {
+    background-color: #e0f7fa; /* Light blue background color */
+}
+
+.full-width-container {
+    width: 100%; /* Ensure the container covers the full width */
+    padding: 0; /* Remove padding if it exists */
+    margin: 0; /* Remove margin if it exists */
+}
+
+.border-cover {
+    border: 2px solid #ddd; /* Adjust border color and width */
+    padding: 1rem; /* Adjust padding inside the border */
+    background-color: rgb(71, 97, 184); /* Light blue background color */
+}
+
+.row.border-cover {
+    width: 100%; /* Ensure row covers full width */
+    margin-left: auto; /* Align left */
+    margin-right: auto; /* Align right */
+}
+
+.card {
+    border: 1px solid #ddd; /* Light border color for cards */
+    cursor: pointer;
+}
+
+.smaller-card {
+    width: 100%; /* Ensure card takes full width of column */
+    max-width: 150px; /* Adjust width as needed */
+    margin: 0 auto; /* Center align card within column */
+    border-left: 3px solid #ddd; /* Increase border size on the left */
+    border-right: 3px solid #ddd; /* Increase border size on the right */
+}
+
+.smaller-card .card-body {
+    padding: 0.5rem; /* Reduce padding inside the card body */
+}
+
+.rounded-circle img {
+    border-radius: 50%; /* Ensure images are round */
+    width: 80px; /* Adjust size as needed */
+    height: 80px; /* Adjust size as needed */
+}
+
+
+</style>
+
+
+       
+
+
+
+    <!-- Bootstrap JS and dependencies (Optional for interactive components) -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>
+
+

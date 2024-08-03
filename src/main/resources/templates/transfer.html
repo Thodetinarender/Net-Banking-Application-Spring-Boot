@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Transfer Funds</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+	 .navbar-custom {
+            background-color: white;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        .navbar-nav .nav-item .nav-link {
+            font-size: 1.125rem;
+            font-weight: 600;
+        }
+        .navbar-nav .nav-item .nav-link:hover {
+            background-color: #f8f9fa;
+        }
+        .btn-custom {
+            background-color: #00bcd4;
+            color: white;
+            font-weight: 600;
+            border-radius: 1.5rem;
+        }
+        .btn-custom:hover {
+            background-color: #0288d1;
+        }
+        .logo {
+            max-width: 100px;
+        }
+        .avatar {
+            width: 30px;
+            margin-left: 0.5rem;
+        }
+        .centered-box {
+            border: 1px solid #000; /* Black border */
+            background-color: #f8f9fa; /* Light gray background */
+            padding: 30px; /* Increased padding for larger size */
+            margin-top: 10px;
+            border-radius: 5px;
+            width: 50%; /* Increased width */
+        }
+        .center-content {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            height: 70vh; /* Full viewport height */
+        }
+        
+        
+    </style>
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</head>
+<body>
+	 <nav class="navbar navbar-expand-lg navbar-light navbar-custom px-4 py-3">
+        <a class="navbar-brand" href="#">
+            <img class="logo" src="/images/bank-logo.png" alt="logo">
+        </a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse d-flex" id="navbarNav">
+            <!-- Close button inside the navbar -->
+            <div class="ml-auto">
+                <a class="btn btn-danger" href="/api/transactions/user">Close</a>
+            </div>
+        </div>
+    </nav>
+
+<div class="container center-content">
+    <div class="centered-box">
+        <h2 class="text-center">Transfer Funds</h2>
+
+        <!-- Error Message -->
+        <div th:if="${errorMessage}" class="alert alert-danger" role="alert">
+            <span th:text="${errorMessage}"></span>
+        </div>
+
+        <!-- Success Message -->
+        <div th:if="${successMessage}" class="alert alert-success" role="alert">
+            <span th:text="${successMessage}"></span>
+        </div>
+
+        <!-- Check Recipient Form -->
+        <form th:action="@{/api/transactions/checkReceiver}" th:object="${receiverDTO}" method="post">
+            <div class="form-group">
+                <label for="phone">Phone</label>
+                <input type="text" th:field="*{phone}" class="form-control" id="phone" placeholder="Enter phone number" required>
+                <div th:if="${#fields.hasErrors('phone')}" class="alert alert-danger" th:errors="*{phone}"></div>
+            </div>
+            <button type="submit" class="btn btn-primary btn-block">Check Receiver</button>
+        </form>
+
+        <!-- Display receiver Username -->
+        <div th:if="${receiverName}" class="mt-3">
+            <p>Receiver Name: <span th:text="${receiverName}"></span></p>
+
+            <!-- Open Popup Button -->
+            <button type="button" class="btn btn-success btn-block" data-toggle="modal" data-target="#transferModal">Pay</button>
+        </div>
+
+        <!-- Transfer Modal -->
+        <div class="modal fade" id="transferModal" tabindex="-1" role="dialog" aria-labelledby="transferModalLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="transferModalLabel">Enter Amount</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <form th:action="@{/api/transactions/transfer}" th:object="${transferDTO}" method="post">
+                            <input type="hidden" th:field="*{phone}">
+                            <div class="form-group">
+                                <label for="amount">Enter amount to transfer</label>
+                                <input type="number" th:field="*{amount}" class="form-control" id="amount" placeholder="Enter amount" required>
+                                <div th:if="${#fields.hasErrors('amount')}" class="alert alert-danger" th:errors="*{amount}"></div>
+                            </div>
+                            <button type="submit" class="btn btn-primary btn-block">Confirm Transfer</button>
+                        </form>
+                    </div>
+                   
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>

@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bank of NRT</title>
+    <!-- Add Bootstrap CSS -->
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        .navbar-custom .nav-link {
+            background-color: lightblue;
+            border: 1px solid black;
+            margin-right: 10px; /* Space between items */
+            border-radius: 5px; /* Optional: rounded corners */
+        }
+        .navbar-custom .nav-link:hover {
+            background-color: #d0e9f4; /* Optional: slightly darker blue on hover */
+        }
+        .navbar-custom .dropdown-menu {
+            background-color: lightblue;
+            border: 1px solid black;
+        }
+        
+        .navbar-custom {
+            border-bottom: 2px solid #ddd; /* Border color and thickness */
+        }
+        .container {
+            margin-top: 50px; /* Adjust space between nav and container */
+        }
+        .registration-box {
+            max-width: 500px;
+            margin: 0 auto; /* Center horizontally */
+        }
+        
+        .card-custom {
+            border-bottom-left-radius: 10% 50%;
+            border-top-left-radius: 10% 50%;
+            background-color: #f8f9fa;
+            padding: 20px; /* Adjust padding as needed */
+        }
+
+        .input-custom {
+            background-color: white;
+            border: 1px solid #ced4da; /* Standard border for input fields */
+            border-radius: 0.25rem; /* Standard border radius for input fields */
+        }
+
+        .btn-rounded {
+            border-radius: 1.5rem; /* Round button corners */
+        }
+
+        .white-text {
+            color: hsl(52, 0%, 98%);
+            font-weight: 100;
+            font-size: 14px;
+        }
+
+        .back-button {
+            background-color: hsl(52, 0%, 98%);
+            font-weight: 700;
+            color: black;
+            margin-top: 50px;
+        }
+
+        .btn-primary {
+            background-color: #0062CC; /* Button color */
+            border-color: #0062CC; /* Button border color */
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-light bg-body-tertiary navbar-custom">
+        <div class="container-fluid">
+            <a class="navbar-brand">Bank of NRT</a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav mx-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">Services</a>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            Login/Signup
+                        </a>
+                        <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                            <a class="dropdown-item" href="/api/loginmgt/login">Login</a>
+                            <a class="dropdown-item" href="/api/loginmgt/registration">Signup</a>
+                        </div>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">About</a>
+                    </li>
+                </ul>
+                <ul class="navbar-nav ml-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">Profile</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+    
+    <div class="container">
+        <div class="row justify-content-center mt-5">
+            <div class="col-md-8 col-lg-6">
+                <div class="card card-custom">
+                    <div class="card-body">
+                        <h2 class="text-center">Register</h2>
+                             <form th:action="@{/api/loginmgt/registration}" th:object="${userDTO}" method="post" id="registrationForm">
+    <div th:if="${error}" class="alert alert-danger" role="alert">
+        <span th:text="${error}"></span>
+    </div>
+    <div class="form-row">
+        <div class="form-group col-md-6">
+            <label for="firstName">First Name</label>
+            <input type="text" id="firstName" name="firstName" class="form-control input-custom" required>
+        </div>
+        <div class="form-group col-md-6">
+            <label for="lastName">Last Name</label>
+            <input type="text" id="lastName" name="lastName" class="form-control input-custom" required>
+        </div>
+    </div>
+    <input type="hidden" id="username" name="username">
+         <div class="form-row">
+    <div class="form-group col-md-6">
+        <label for="password">Password</label>
+        <input type="password" id="password" name="password" class="form-control input-custom" required>
+        <span id="passwordFeedback" class="text-danger" style="display:none;">Password must be at least 8 characters long, contain at least one uppercase letter, one lowercase letter, one number, and one special character.</span>
+    </div>
+    <div class="form-group col-md-6">
+        <label for="confirmPassword">Confirm Password</label>
+        <input type="password" id="confirmPassword" name="confirmPassword" class="form-control input-custom" required>
+        <span id="confirmPasswordFeedback" class="text-danger" style="display:none;">Passwords do not match.</span>
+    </div>
+</div>
+
+   
+   
+   
+    <div class="form-group">
+        <label for="email">Email</label>
+        <input type="email" id="email" name="email" class="form-control input-custom" th:field="*{email}" required>
+        <div th:if="${#fields.hasErrors('email')}" class="alert alert-danger" th:errors="*{email}"></div>
+    </div>
+    <div class="form-group">
+        <label for="phone">Phone</label>
+        <input type="text" id="phone" name="phone" class="form-control input-custom" th:field="*{phone}" required>
+        <div th:if="${#fields.hasErrors('phone')}" class="alert alert-danger" th:errors="*{phone}"></div>
+    </div>
+    <div class="form-group">
+    <label for="address">Address</label>
+    <input type="text" id="address" name="address" class="form-control input-custom" th:field="*{address}" required>
+    <div class="invalid-feedback">
+        Please enter a valid address.
+    </div>
+</div>
+
+    <button type="submit" class="btn btn-primary btn-rounded w-100">Register</button>
+</form>
+
+                         <div class="text-center mt-3">
+                            <a href="/api/loginmgt/login" class="btn btn-link"> Already have a Account</a>
+                        </div>
+
+                       
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+   
+		
+		<script>
+			
+			document.getElementById('registrationForm').addEventListener('submit', function(event) {
+    var password = document.getElementById('password').value;
+    var confirmPassword = document.getElementById('confirmPassword').value;
+    var passwordFeedback = document.getElementById('passwordFeedback');
+    var confirmPasswordFeedback = document.getElementById('confirmPasswordFeedback');
+
+    var strongPasswordPattern = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+
+    var isValid = true;
+
+    if (!strongPasswordPattern.test(password)) {
+        passwordFeedback.style.display = 'block';
+        isValid = false;
+    } else {
+        passwordFeedback.style.display = 'none';
+    }
+
+    if (password !== confirmPassword) {
+        confirmPasswordFeedback.style.display = 'block';
+        isValid = false;
+    } else {
+        confirmPasswordFeedback.style.display = 'none';
+    }
+
+    if (!isValid) {
+        event.preventDefault(); // Prevent form submission if validation fails
+    }
+});
+
+			
+			
+			document.querySelector('form').addEventListener('submit', function(event) {
+    var firstName = document.getElementById('firstName').value.trim();
+    var lastName = document.getElementById('lastName').value.trim();
+    var username = firstName + ' ' + lastName;
+    
+    // Assuming 'username' field is present in the form
+    var usernameField = document.querySelector('input[name="username"]');
+    
+    if (usernameField) {
+        usernameField.value = username;
+    }
+});
+
+
+ document.getElementById('registrationForm').addEventListener('submit', function(event) {
+        var address = document.getElementById('address').value.trim();
+
+        if (address.length < 15) {
+            alert('Address must be at least 15 characters long');
+            event.preventDefault(); // Prevent form submission
+        }
+    });
+   
+      
+        </script>
+
+	
+		
+
+    <!-- Add Bootstrap JS and dependencies -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>

@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Navbar Example</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Custom CSS (Optional for additional styles) -->
+    <style>
+        .navbar-custom {
+            background-color: white;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        .navbar-nav .nav-item .nav-link {
+            font-size: 1.125rem;
+            font-weight: 600;
+        }
+        .navbar-nav .nav-item .nav-link:hover {
+            background-color: #f8f9fa;
+        }
+        .btn-custom {
+            background-color: #00bcd4;
+            color: white;
+            font-weight: 600;
+            border-radius: 1.5rem;
+        }
+        .btn-custom:hover {
+            background-color: #0288d1;
+        }
+        .logo {
+            max-width: 100px;
+        }
+        .avatar {
+            width: 30px;
+            margin-left: 0.5rem;
+        }
+        .hero-section img {
+            max-width: 100%;
+            height: auto;
+        }
+        
+         .bordered-container {
+            border: 2px solid #ccc; /* Adjust border color and width */
+            padding: 10px 20px; /* Adjust top-bottom and left-right padding */
+            margin: 0 20px; /* 20px space on left and right sides */
+            background-color: #ccc; /* Optional: background color */
+            box-sizing: border-box; /* Ensures padding and border are included in the element’s total width and height */
+        }
+        
+        
+    </style>
+</head>
+<body class="bg-light">
+     <nav class="navbar navbar-expand-lg navbar-light navbar-custom px-4 py-3">
+        <a class="navbar-brand" href="#">
+            <img class="logo" src="/images/bank-logo.png" alt="logo">
+        </a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse d-flex" id="navbarNav">
+            <!-- Close button inside the navbar -->
+            <div class="ml-auto">
+                <a class="btn btn-danger" href="/api/transactions/user">Close</a>
+            </div>
+        </div>
+    </nav>
+                 <!-- Modal HTML -->
+<div class="modal fade" id="userDetailsModal" tabindex="-1" role="dialog" aria-labelledby="userDetailsModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="userDetailsModalLabel">User Details</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p><strong>Username:</strong> <span th:text="${username}"></span></p>
+                <p><strong>Email:</strong> <span th:text="${email}"></span></p>
+                <p><strong>Phone:</strong> <span th:text="${phone}"></span></p>
+                <p><strong>Address:</strong> <span th:text="${address}"></span></p>
+            </div>
+            <div class="modal-footer">
+                <form action="/logout" method="post">
+                    <button type="submit" class="btn btn-danger">Logout</button>
+                </form>
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+    
+    <div class="container p-2 mx-auto text-center bordered-container mt-1">
+        <p class="text-base font-semibold">
+            No Wallet KYC Required 😊 to pay using UPI on Paytm. Learn more.
+        </p>
+    </div>
+
+    <div class="container">
+        <h1>Payments History</h1>
+           <div class="text-right mb-3">
+            <a href="/api/transactions/transfer" class="btn btn-custom">Pay Again</a>
+        </div>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Date</th>
+                    <th>Amount</th>
+                    <th>From Account</th>
+                    <th>To Account</th>
+                    <th>Type</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="transaction : ${transactions}">
+                    <td th:text="${transaction.dateTime}"></td>
+                    <td th:text="${transaction.amount}"></td>
+                    <td th:text="${transaction.fromAccId}"></td>
+                    <td th:text="${transaction.toAccId}"></td>
+                    <td th:text="${transaction.txType}"></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+   
+    
+
+
+    <!-- Bootstrap JS and dependencies (Optional for interactive components) -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>
+
